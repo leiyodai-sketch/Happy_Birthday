@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Happy Birthday, Bader 🎂</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#120d1a;--bg2:#2a0f1f;--red:#d3202e;--orange:#ff7a2f;--ink:#f7efe6;--panel:#1d1428;--line:#ff7a2f;}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font-family:"Rajdhani","Segoe UI",Tahoma,sans-serif;font-weight:600;color:var(--ink);background:radial-gradient(130% 90% at 50% 0%,var(--bg2),var(--bg));overflow:hidden;-webkit-tap-highlight-color:transparent}
+#app{height:100%;width:100%;display:flex;flex-direction:column;padding:calc(env(safe-area-inset-top,0px) + 6px) calc(env(safe-area-inset-right,0px) + 14px) calc(env(safe-area-inset-bottom,0px) + 8px) calc(env(safe-area-inset-left,0px) + 14px)}
+.screen{display:none;flex:1;flex-direction:column;min-height:0;position:relative}
+.screen.on{display:flex}
+button{font:inherit;color:inherit;cursor:pointer}
+.btn{background:var(--red);border:2px solid var(--orange);border-radius:6px;padding:8px 30px;font-weight:700;font-size:clamp(18px,4vh,24px)}
+.btn:focus-visible,.choice:focus-visible,#mail:focus-visible,.tool:focus-visible{outline:3px solid #fff;outline-offset:3px}
+
+/* title */
+#title{justify-content:center;align-items:center;text-align:center;gap:clamp(8px,2.5vh,18px)}
+#title .cake{font-size:clamp(40px,14vh,72px);line-height:1}
+#title h1{font-size:clamp(30px,11vh,64px);font-weight:700;line-height:1.05}
+#title h1 span{color:var(--orange)}
+#title p{opacity:.85;max-width:46ch;line-height:1.4;font-size:clamp(17px,4vh,22px)}
+
+/* game */
+#stage{position:relative;flex:1;min-height:0}
+#portrait{position:absolute;inset:0;display:flex;align-items:flex-end;justify-content:center}
+#portrait img{max-height:100%;max-width:100%;width:auto;height:auto;object-fit:contain;filter:drop-shadow(0 8px 18px #0008)}
+#fallback{display:none;height:min(100%,260px);aspect-ratio:1;border-radius:50%;border:4px solid var(--orange);background:linear-gradient(160deg,var(--red),#6a1020);align-items:center;justify-content:center;flex-direction:column;margin-bottom:6px;line-height:1}
+#fallback b{font-size:clamp(40px,12vh,84px)}
+#fallback small{font-size:clamp(14px,3vh,20px);opacity:.85;margin-top:4px}
+#bubble{position:relative;width:min(100%,980px);margin:14px auto 0;background:var(--panel);border:2px solid var(--line);border-radius:14px;padding:14px 22px 20px;min-height:clamp(84px,24vh,150px);cursor:pointer}
+#bubble::before{content:"";position:absolute;top:-12px;left:50%;margin-left:-10px;width:18px;height:18px;background:var(--panel);border-top:2px solid var(--line);border-left:2px solid var(--line);transform:rotate(45deg)}
+#name{position:absolute;top:-15px;left:18px;background:var(--red);border:2px solid var(--orange);border-radius:5px;padding:0 14px;font-weight:700;font-size:18px}
+#text{font-size:clamp(18px,2.6vw,27px);line-height:1.4;padding-top:6px}
+#hint{position:absolute;right:16px;bottom:5px;font-size:15px;opacity:.6;animation:blink 1.2s infinite}
+@keyframes blink{50%{opacity:.15}}
+#choices{position:absolute;left:50%;top:42%;transform:translate(-50%,-50%);width:min(92%,700px);display:flex;flex-direction:column;gap:10px;z-index:4}
+#choices:empty{display:none}
+.choice{background:#2b1a3a;border:2px solid var(--orange);border-radius:10px;padding:10px 18px;text-align:left;font-size:clamp(18px,2.6vw,24px);line-height:1.3;box-shadow:0 6px 24px #000a;transition:background .15s,transform .15s}
+.choice:hover{background:var(--red)}
+.choice:active{transform:scale(.98)}
+
+/* final */
+#final{justify-content:center;align-items:center;text-align:center;gap:clamp(6px,2vh,16px);overflow-y:auto}
+#mail{background:none;border:0;font-size:clamp(90px,40vh,210px);line-height:1;animation:bob 1.6s ease-in-out infinite;filter:drop-shadow(0 10px 22px #ff7a2f66)}
+@keyframes bob{50%{transform:translateY(-12px) rotate(-3deg)}}
+#final .cap{font-size:clamp(22px,6vh,30px);font-weight:700}
+#letter{display:none;background:#f7efe6;color:#2a1620;border-radius:12px;border-top:8px solid var(--red);padding:20px 26px;text-align:left;line-height:1.45;font-size:clamp(17px,2.4vw,22px);width:min(100%,820px);max-height:100%;overflow-y:auto}
+#letter h2{font-size:clamp(22px,3vw,30px);margin-bottom:8px;color:var(--red)}
+#letter p{margin-bottom:10px;white-space:pre-line}
+#letter .sig{font-weight:700;margin-top:14px;font-size:1.1em}
+#again{margin-top:4px;display:none}
+
+.tools{display:none;position:fixed;top:calc(env(safe-area-inset-top,0px) + 8px);right:calc(env(safe-area-inset-right,0px) + 12px);z-index:6;gap:8px}
+.tool{width:42px;height:42px;border-radius:50%;background:var(--panel);border:2px solid var(--orange);font-size:19px}
+.song{margin-top:16px;padding-top:12px;border-top:2px dashed var(--red);text-align:center}
+.song a{display:inline-block;background:var(--red);color:#fff;text-decoration:none;font-weight:700;border-radius:8px;padding:9px 20px}
+
+/* ask phones to rotate */
+#rotate{display:none;position:fixed;inset:0;z-index:99;background:var(--bg);align-items:center;justify-content:center;text-align:center;flex-direction:column;gap:14px;padding:24px;font-size:24px}
+#rotate .ic{font-size:70px;animation:turn 2s ease-in-out infinite}
+@keyframes turn{0%,100%{transform:rotate(0)}50%{transform:rotate(-90deg)}}
+@media (orientation:portrait) and (max-width:800px){#rotate{display:flex}}
+@media (prefers-reduced-motion:reduce){#mail,#hint,#rotate .ic{animation:none}}
+</style>
+</head>
+<body>
+<div id="rotate"><div class="ic">📱</div><div>Please rotate your phone<br>to play in landscape</div></div>
+<div class="tools" id="tools">
+  <button class="tool" id="voiceBtn" aria-label="Toggle Asuka's voice">🗣️</button>
+  <button class="tool" id="music" aria-label="Toggle music" style="display:none">🔊</button>
+</div>
+<div id="app">
+
+  <section class="screen on" id="title">
+    <div class="cake">🎂</div>
+    <h1>Happy Birthday,<br><span>Bader</span></h1>
+    <p>A little game Mira made for you. Asuka is waiting... and she hates waiting.</p>
+    <button class="btn" id="start">Start Game</button>
+  </section>
+
+  <section class="screen" id="game">
+    <div id="stage">
+      <div id="portrait"><img id="pic" alt="Asuka"><div id="fallback"></div></div>
+    </div>
+    <div id="bubble"><div id="name">Asuka</div><div id="text"></div><span id="hint">Tap to continue ▾</span></div>
+    <div id="choices"></div>
+  </section>
+
+  <section class="screen" id="final">
+    <div class="cap" id="cap">You've got mail...</div>
+    <button id="mail" aria-label="Open the letter">✉️</button>
+    <div id="letter"></div>
+    <button class="btn" id="again">Play again</button>
+  </section>
+
+</div>
+
+<script>
+/* ============ EDIT HERE ============ */
+
+// Mira's letter: replace with your real words (blank line = new paragraph)
+const LETTER = {
+  title: "To Bader, on his 24th birthday 🎂",
+  body: `Happy birthday, Bader.
+
+Some of my favorite moments are simply the times I got to be around you. With you, I feel safe. I never have to pretend or pick my words carefully, because I know you accept me exactly as I am.
+
+You treat me like a daughter sometimes, and like a little cat at other times, and honestly, I love both. You look out for me, you tease me, and you somehow always show up when I need it most.
+
+I know I've made you angry many times. I'm not always easy to deal with. But every single time, we come back and talk to each other, and we make it right. That says everything about you, and about what we have. Not many people stay, listen and forgive the way you do, and I never take that for granted.
+
+I respect you a lot, because you are honest, steady and kind, and you stay the same person no matter the situation. That is rare.
+
+I hope this year is full of success and joy, and that every wish you make comes true. And if Asuka got angry at you in the game, don't be sad. That's just how she says she cares 😄`,
+  sign: "From your friend, Mira 💌"
+};
+
+// His favorite song. YT_ID = the part of the YouTube link after v=
+const SONG = {
+  title: "Sweater Weather - The Neighbourhood",
+  note: "And here's your favorite song, a little gift to go with it 🎧",
+  YT_ID: ""
+};
+
+// Asuka's voice settings (uses the voices built into the browser)
+const VOICE = { pitch: 1.3, rate: 1.05 };
+/* =================================== */
+
+const MOODS = {normal:"Annoyed", angry:"Angry", happy:"Happy", blush:"Flustered", smug:"Smug"};
+// Put Asuka's pictures in an "images" folder: asuka_normal.png, asuka_angry.png ...
+const IMG = f => `images/asuka_${f}.png`;
+
+const S = {
+  intro: {lines:[
+    ["angry","About time you showed up! You're late... I don't wait for anyone, got it?"],
+    ["smug","I'm Asuka Langley Soryu, the best pilot in the world! And you're Bader, right?"],
+    ["blush","I heard your birthday is November 18th. And don't get the wrong idea, I'm NOT here for you! Mira made me come."]],
+    next:"q2",
+    choices:[
+      {t:"Thanks Asuka, I'm happy to see you 😊", p:2, r:[["blush","W-what?! Don't say nice things so suddenly... idiot."]]},
+      {t:"You seem pretty excited 😏", p:1, r:[["angry","Excited?! Who's excited?! I was just... passing by!"]]},
+      {t:"Sorry, who are you again?", p:0, r:[["angry","WHAT?! I'm Asuka! Remember the name, baka!"]]}]},
+  q2: {lines:[
+    ["normal","Fine, let's move on. You're turning twenty-four. You finally grew up, even if you don't look like it."],
+    ["smug","So tell me, what do you dream about? What do you really want out of your life?"]],
+    next:"q3",
+    choices:[
+      {t:"I want to make my family happy.", p:2, dream:"family", r:[["blush","...Tch. That's actually really admirable. Don't let it go to your head, got it?"]]},
+      {t:"I want to chase my dreams, land the job I want, and get rich.", p:2, dream:"success", r:[["happy","Now THAT'S the right attitude! Aim high, just like me!"]]}]},
+  q3: {lines:[
+    ["normal","I brought you a gift. And no, I didn't buy it for you... I just happened to have it."],
+    ["smug","But do you deserve it? Convince me."]],
+    next:"end",
+    choices:[
+      {t:"I deserve it, I'm a loyal friend.", p:2, r:[["blush","...I can't argue with that. Fine, it's yours."]]},
+      {t:"Keep it, it's okay.", p:1, r:[["angry","What?! Don't refuse my gift! Take it, now!"]]},
+      {t:"I don't want your gift 😛", p:0, r:[["angry","You... you absolute idiot! I'll make you take it!"]]}]}
+};
+
+const ENDINGS = {
+  good: [["happy","Fine... I'll say this once, so listen carefully."],
+         ["blush","Happy birthday, Bader. I'm glad you exist... but if you tell anyone I said that, I'll hit you!"],
+         ["happy","Now go on, Mira left you a special letter. Hurry up!"]],
+  mid:  [["smug","You're not so bad. I admit it. Barely."],
+         ["happy","Happy birthday, Bader! Don't get used to me being nice, this happens once a year."],
+         ["normal","Go on, there's a message from Mira waiting for you."]],
+  bad:  [["angry","Hmph! You're really hard to please!"],
+         ["blush","...But happy birthday, Bader. Don't look at me like that! I said it, so drop it."],
+         ["normal","Go open Mira's letter. She's way nicer than I am."]]
+};
+const DREAM = {
+  family: ["blush","And when you make your family happy, make sure you're happy too. Idiot."],
+  success:["smug","And when you're rich and successful, remember I believed in you first. Pay me back in cake."]
+};
+
+const $ = id => document.getElementById(id);
+let pts = 0, dream = "family", queue = [], after = null;
+
+function show(id){document.querySelectorAll(".screen").forEach(s=>s.classList.toggle("on",s.id===id));}
+
+const EXTS=["png","jpg","jpeg","webp"];
+function face(f){
+  const img=$("pic"), fb=$("fallback");
+  fb.innerHTML="<b>A</b><small></small>"; fb.querySelector("small").textContent="Asuka · "+MOODS[f];
+  let k=0;
+  img.onerror=()=>{ if(++k<EXTS.length){ img.src=IMG(f).replace(/\.png$/,"."+EXTS[k]); } else { img.style.display="none"; fb.style.display="flex"; } };
+  img.onload=()=>{img.style.display="block";fb.style.display="none";};
+  img.src=IMG(f);
+}
+
+/* ===== Asuka's voice (browser text-to-speech) ===== */
+let voiceOn = true, chosenVoice = null;
+const synth = window.speechSynthesis;
+function pickVoice(){
+  if(!synth) return null;
+  const vs = synth.getVoices().filter(v=>/^en/i.test(v.lang));
+  const pref = ["Google UK English Female","Google US English","Samantha","Aria","Jenny","Zira","Karen","Moira","Tessa","Female"];
+  for(const p of pref){ const v=vs.find(v=>v.name.includes(p)); if(v) return v; }
+  return vs[0]||null;
+}
+if(synth) synth.onvoiceschanged=()=>{chosenVoice=pickVoice();};
+function speak(t){
+  if(!synth) return;
+  synth.cancel();
+  if(!voiceOn) return;
+  const u=new SpeechSynthesisUtterance(t);
+  chosenVoice=chosenVoice||pickVoice();
+  if(chosenVoice) u.voice=chosenVoice;
+  u.lang="en-US"; u.pitch=VOICE.pitch; u.rate=VOICE.rate;
+  synth.speak(u);
+}
+$("voiceBtn").onclick=()=>{
+  voiceOn=!voiceOn; $("voiceBtn").textContent=voiceOn?"🗣️":"🤐";
+  if(!voiceOn&&synth) synth.cancel();
+};
+
+let typing=null;
+function say(f,t){
+  face(f); clearInterval(typing); speak(t);
+  const el=$("text"); el.textContent=""; $("hint").style.visibility="hidden";
+  let i=0;
+  typing=setInterval(()=>{ el.textContent=t.slice(0,++i); if(i>=t.length){clearInterval(typing);typing=null;$("hint").style.visibility="visible";} },22);
+  say.full=()=>{clearInterval(typing);typing=null;el.textContent=t;$("hint").style.visibility="visible";};
+}
+
+function play(lines,done){ queue=lines.slice(); after=done; next(); }
+function next(){
+  if(typing){say.full();return;}
+  if(!queue.length){ const a=after; after=null; if(a)a(); return; }
+  const [f,t]=queue.shift(); say(f,t);
+}
+
+function scene(id){
+  if(id==="end"){
+    const e=(pts>=5?ENDINGS.good:pts>=3?ENDINGS.mid:ENDINGS.bad).slice();
+    e.splice(2,0,DREAM[dream]);
+    return play(e,showFinal);
+  }
+  const s=S[id];
+  play(s.lines,()=>{
+    $("choices").innerHTML="";
+    $("hint").style.visibility="hidden";
+    s.choices.forEach(c=>{
+      const b=document.createElement("button");
+      b.className="choice"; b.textContent=c.t;
+      b.onclick=()=>{ pts+=c.p; if(c.dream) dream=c.dream; $("choices").innerHTML=""; play(c.r,()=>scene(s.next)); };
+      $("choices").appendChild(b);
+    });
+  });
+}
+
+function showFinal(){
+  show("final");
+  $("mail").style.display="block"; $("cap").style.display="block";
+  $("letter").style.display="none"; $("again").style.display="none";
+}
+
+/* ===== Music ===== */
+let yt=null, playing=false;
+function ytCmd(fn,args){ if(yt) yt.contentWindow.postMessage(JSON.stringify({event:"command",func:fn,args:args||""}),"*"); }
+function startMusic(){
+  if(!SONG.YT_ID || yt) return;
+  const id=encodeURIComponent(SONG.YT_ID);
+  yt=document.createElement("iframe");
+  yt.src=`https://www.youtube.com/embed/${id}?autoplay=1&loop=1&playlist=${id}&controls=0&enablejsapi=1&playsinline=1`;
+  yt.allow="autoplay; encrypted-media"; yt.title="music";
+  yt.style.cssText="position:fixed;bottom:0;left:0;width:2px;height:2px;opacity:0;pointer-events:none;border:0";
+  yt.onload=()=>setTimeout(()=>ytCmd("setVolume",[35]),800); // keep music quieter than Asuka's voice
+  document.body.appendChild(yt);
+  playing=true;
+  $("music").style.display="block"; $("music").textContent="🔊";
+}
+$("music").onclick=()=>{
+  playing=!playing; ytCmd(playing?"playVideo":"pauseVideo");
+  $("music").textContent=playing?"🔊":"🔇";
+};
+
+$("start").onclick=()=>{
+  pts=0; dream="family"; show("game"); $("choices").innerHTML="";
+  $("tools").style.display="flex"; startMusic(); scene("intro");
+  try{ const d=document.documentElement; (d.requestFullscreen?d.requestFullscreen():Promise.resolve()).then(()=>screen.orientation&&screen.orientation.lock&&screen.orientation.lock("landscape")).catch(()=>{}); }catch(e){}
+};
+$("bubble").onclick=next;
+document.addEventListener("keydown",e=>{ if((e.key===" "||e.key==="Enter")&&$("game").classList.contains("on")&&!$("choices").children.length){e.preventDefault();next();} });
+
+$("mail").onclick=()=>{
+  $("mail").style.display="none"; $("cap").style.display="none";
+  const L=$("letter");
+  L.innerHTML=`<h2></h2><p></p><div class="sig"></div>`;
+  L.querySelector("h2").textContent=LETTER.title;
+  L.querySelector("p").textContent=LETTER.body;
+  L.querySelector(".sig").textContent=LETTER.sign;
+  const box=document.createElement("div"); box.className="song";
+  const n=document.createElement("p"); n.textContent=SONG.note; box.appendChild(n);
+  if(SONG.YT_ID){
+    const t=document.createElement("p"); t.textContent="🎵 "+SONG.title; t.style.fontWeight="700";
+    box.appendChild(t);
+  } else {
+    const a=document.createElement("a");
+    a.href="https://www.youtube.com/results?search_query="+encodeURIComponent(SONG.title);
+    a.target="_blank"; a.rel="noopener"; a.textContent="🎵 "+SONG.title;
+    box.appendChild(a);
+  }
+  L.appendChild(box);
+  L.style.display="block"; $("again").style.display="inline-block";
+};
+$("again").onclick=()=>{ if(synth) synth.cancel(); show("title"); };
+</script>
+</body>
+</html>
